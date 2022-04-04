@@ -58,17 +58,6 @@ class Lorenz:
             self.Y = Yval[self.count]
             self.Z = Zval[self.count]
             self.count += 1
-
-    # this function creates a smoother curve ------------------------------------------------
-    '''
-    def AttractorTimeStep(self):
-        self.startingX, self.startingY, self.startingZ = self.X, self.Y, self.Z # initial conditions
-        # X directional time stepping, this is a numerical way of stating a derivative
-        # here we state the combinations of the (X,Y,Z) vector
-        self.X = self.X + (self.dt * self.sigma * (self.Y - self.X))
-        self.Y = self.Y + (self.dt * (self.X * (self.rho - self.Z) - self.Y))
-        self.Z = self.Z + (self.dt * ((self.X * self.Y) - (self.beta * self.Z)))
-    '''
     def DrawToScreen(self, X, Y, MinXvalue, MaxXvalue, MinYvalue, MaxYvalue, width, height):
         newXposition = width * ((self.X - self.MinXvalue)/ (self.MaxXvalue - self.MinXvalue))
         newYposition = height * ((self.Y - self.minYvalue)/(self.MaxYvalue - self.minYvalue))
