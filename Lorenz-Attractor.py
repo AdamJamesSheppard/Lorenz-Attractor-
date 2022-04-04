@@ -5,10 +5,6 @@ import numpy as numpy
 
 class Lorenz:
     def __init__(self):
-        # initial states for the strange attractor 
-        self.MinXvalue, self.MaxXvalue = -30, 30
-        self.minYvalue, self.MaxYvalue = -30, 30
-        self.minZvalue, self.MaxZvalue =  0, 50 
         # initial starting points
         self.X, self.Y, self.Z = 0.1, 0.0, 0.0
         # inital states for one lorenz attarctor at a time, this will be used for the drawing
@@ -19,6 +15,10 @@ class Lorenz:
         self.PixelColour = (10, 100, 65)
         # inital states for the loops, so each lorenz attarctor will be passed through this for processing in the solve_system method
         self.initialXvalue, self.initialYvalue, self.initialZvalue = self.X, self.Y, self.Z
+        # initial states for the strange attractor 
+        self.MinXvalue, self.MaxXvalue = -30, 30
+        self.minYvalue, self.MaxYvalue = -30, 30
+        self.minZvalue, self.MaxZvalue =  0, 50 
         self.states = None 
         self.count = 0
         self.number_of_frames = 0
