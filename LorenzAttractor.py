@@ -1,4 +1,3 @@
-
 import random
 import matplotlib.pyplot
 import numpy as numpy
@@ -244,11 +243,6 @@ class Lorenz:
     def solve_system(self):
         self.states = self.PredictorCorrector(self.xt, self.yt, self.zt)
 
-    def get_cmap(self, n, name='hsv'):
-        '''Returns a function that maps each index in 0, 1, ..., n-1 to a distinct 
-    RGB color; the keyword argument name must be a standard mpl colormap name.'''
-        return matplotlib.pyplot.cm.get_cmap(name, n)
-
     def step_function(self):
         self.initialXvalue, self.initialYvalue, self.initialZvalue = self.X, self.Y, self.Z
         Xval = self.states[0]
@@ -396,62 +390,6 @@ class LorenzApplication:
             self.fpsClock.tick()
             self.count += 1
         pygame.quit()
-class Lorenz_System_EKF_Prediction(Lorenz):
-
-    def Lorenz63(self, state, *args):  # Lorenz 96 model
-        # rho = 28.0     #sigma = 10.0     #beta = 8.0 / 3.0
-
-        sigma = args[0]
-        beta = args[1]
-        rho = args[2]
-        x, y, z = state  # Unpack the state vector
-        f = numpy.zeros(3)  # Derivatives
-        f[0] = sigma * (y - x)
-        f[1] = x * (rho - z) - y
-        f[2] = x * y - beta * z
-        return f
-
-    def transposeMatrix(self, m):
-        return map(list, zip(*m))
-
-    def getMatrixMinor(m, i, j):
-        return [row[:j] + row[j+1:] for row in (m[:i]+m[i+1:])]
-
-    def getMatrixDeternminant(self, m):
-        # base case for 2x2 matrix
-        if len(m) == 2:
-            return m[0][0]*m[1][1]-m[0][1]*m[1][0]
-
-        determinant = 0
-        for c in range(len(m)):
-            determinant += ((-1)**c)*m[0][c] * \
-                self.getMatrixDeternminant(self.getMatrixMinor(m, 0, c))
-        return determinant
-
-    def getMatrixInverse(self, m):
-        determinant = self.getMatrixDeternminant(m)
-        # special case for 2x2 matrix:
-        if len(m) == 2:
-            return [[m[1][1]/determinant, -1*m[0][1]/determinant],
-                    [-1*m[1][0]/determinant, m[0][0]/determinant]]
-
-        # find matrix of cofactors
-        cofactors = []
-        for r in range(len(m)):
-            cofactorRow = []
-            for c in range(len(m)):
-                minor = self.getMatrixMinor(m, r, c)
-                cofactorRow.append(
-                    ((-1)**(r+c)) * self.getMatrixDeternminant(minor))
-            cofactors.append(cofactorRow)
-        cofactors = self.transposeMatrix(cofactors)
-        for r in range(len(cofactors)):
-            for c in range(len(cofactors)):
-                cofactors[r][c] = cofactors[r][c]/determinant
-        return cofactors
-
-    sigma = Lorenz
-
 
 if __name__ == '__main__':
     t = LorenzApplication()
