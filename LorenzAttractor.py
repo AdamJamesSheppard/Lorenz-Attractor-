@@ -1,5 +1,5 @@
 import random
-import matplotlib.pyplot
+import matplotlib.pyplot 
 import numpy as numpy
 import pygame
 from math import sin, cos
@@ -13,7 +13,9 @@ class Lorenz:
         self.minYvalue, self.MaxYvalue = -30, 30
         self.minZvalue, self.MaxZvalue = -40, 0
         # initial starting points
-        self.X, self.Y, self.Z = 0.1, 0.0, 0.0
+        self.X = 0.1
+        self.Y = 0
+        self.Z = 0
         # inital states for one lorenz attarctor at a time, this will be used for the drawing
         self.startingX, self.startingY, self.startingZ = self.X, self.Y, self.Z
         # inital states for the loops, so each lorenz attarctor will be passed through this for processing in the solve_system method
@@ -23,7 +25,7 @@ class Lorenz:
         self.number_of_frames = 0
         self.PixelColour = (10, 100, 65)
         self.dt = 0.01
-        self.tm = 10
+        self.tm = 11
         self.nt = int(self.tm/self.dt)
         self.t = numpy.linspace(0, self.tm, self.nt + 1)
         # Initiate states for the approximation
@@ -194,8 +196,8 @@ class Lorenz:
         return x, y, z, t
 
     def prediction_round(self, xt, yt, zt, n, x, y, z, t, dt, f0_dx, f0_dy, f0_dz, f1_dx, f1_dy, f1_dz, f2_dx, f2_dy, f2_dz, f3_dx, f3_dy, f3_dz):
+        # adams-bashford method AB4 used for standard paramters for the lorenz system as defined above. 
         for k in range(n-1, 0, -1):
-            # Predictor: The fourth-order Adams-Bashforth technique, an explicit four-step method:
             x[k+1] = x[k] + (dt/24) * (
                 55*f3_dx - 59 * f2_dx + 37*f1_dx - 9*f0_dx
             )
@@ -224,8 +226,6 @@ class Lorenz:
                 z[k + 1],
                 t[k + 1]
             )
-
-            # Corrector: The fourth-order Adams-Moulton technique, an implicit three-step method:
             x[k+1] = x[k] + (dt/24) * (9*xt(x[k+1],
                                             y[k+1],
                                             z[k+1],
@@ -235,14 +235,14 @@ class Lorenz:
             y[k+1] = y[k] + (dt/24) * (9*yt(x[k+1],
                                             y[k+1],
                                             z[k+1],
-                                            t[k+1]) + 19*f3_dy - 5*f2_dx + f1_dy
+                                            t[k+1]) + 19 * f3_dy - 5 * f2_dx + f1_dy
                                        )
             z[k+1] = z[k] + (dt/24) * (9*yt(x[k+1], y[k+1],
-                                            z[k+1], t[k+1]) + 19*f3_dz - 5*f2_dx + f1_dz)
+                                            z[k+1], t[k+1]) + 19 * f3_dz - 5 * f2_dx + f1_dz)
 
     def solve_system(self):
         self.states = self.PredictorCorrector(self.xt, self.yt, self.zt)
-
+        
     def step_function(self):
         self.initialXvalue, self.initialYvalue, self.initialZvalue = self.X, self.Y, self.Z
         Xval = self.states[0]
@@ -254,17 +254,6 @@ class Lorenz:
             self.Z = Zval[self.count]
             self.count += 1
     # this function creates a smoother curve ------------------------------------------------
-    '''
-    def AttractorTimeStep(self):
-        # initial conditions
-        self.startingX, self.startingY, self.startingZ = self.X, self.Y, self.Z
-        # X directional time stepping, this is a numerical way of stating a derivative
-        # here we state the combinations of the (X,Y,Z) vector
-        self.X = self.X + (self.dt * self.sigma * (self.Y - self.X))
-        self.Y = self.Y + (self.dt * (self.X * (self.rho - self.Z) - self.Y))
-        self.Z = self.Z + \
-            (self.dt * ((self.X * self.Y) - (self.beta * self.Z)))
-    '''
 
     def DrawToScreen(self, X, Y, MinXvalue, MaxXvalue, MinYvalue, MaxYvalue, width, height):
         newXposition = self.get_new_x_position(width)
@@ -325,7 +314,7 @@ class Lorenz:
     def get_dimensions(self, ParametricSurface):
         width, height = ParametricSurface.get_width(), ParametricSurface.get_height()
         return width, height
-   
+    
 class LorenzApplication:
     def __init__(self):
         self.isRunning = True
@@ -350,14 +339,14 @@ class LorenzApplication:
         self.append_colour_array(attractor_colour)
 
     def append_colour_array(self, attractor_colour):
-        for i in range(0, 10):
+        for i in range(0, 5):
             self.attractors.append(Lorenz())
             self.attractors[i].initialXvalue = random.uniform(-4, 4)
             self.attractors[i].PixelColour = attractor_colour[i]
             self.attractors[i].solve_system()
 
     def random_colour(self, attractor_colour):
-        for each_attractor in range(0, 10):
+        for each_attractor in range(0, 5):
             random_colours = (
                 random.randint(0, 255),
                 random.randint(0, 255),
